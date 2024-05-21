@@ -1,3 +1,48 @@
 h1{
     color: darkorange;
+    margin-bottom: 22px;
+}
+.index1 {
+    background-color: #f8f9fa;
+    padding: 2rem; 
+    border-radius: 8px; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+    margin-bottom: 2rem; 
+}
+
+.index1 h2,
+.index1 h3 {
+    color: #343a40;
+}
+
+.index1 h2 {
+    border-bottom: 2px solid #007bff; 
+    padding-bottom: 0.5rem; 
+    margin-bottom: 1rem;
+}
+
+.index1 p {
+    font-size: 1.1rem; 
+    line-height: 1.6; 
+    color: #495057;
+    margin-bottom: 1rem;
+}
+
+.index1 ul {
+    list-style-type: disc;
+    padding-left: 1.5rem;
+}
+
+.index1 ul li {
+    margin-bottom: 0.5rem;
+}
+
+.index1 ul li:hover {
+    color: #007bff; 
+}
+.fixed-footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 5rem;
 }

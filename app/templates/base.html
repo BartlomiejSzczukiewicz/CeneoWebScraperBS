@@ -13,18 +13,18 @@
         <h1>Ceneo.pl Web Scraper</h1>
     </header>
     <nav class = 'container'>
-        <ul class = 'row'>
+        <ul class = 'row' style='list-style-type: none;'>
             <li class = 'col-3'>
-                <a href = "{{url_for('index')}}">Main Page</a>
+                <a href = "{{url_for('index')}}" class="btn btn-dark">Main Page</a>
             </li>
             <li class = 'col-3'>
-                <a href = "{{url_for('extract')}}">Extract opinions</a>
+                <a href = "{{url_for('extract')}} " class="btn btn-dark">Extract opinions</a>
             </li>
             <li class = 'col-3'>
-                <a href = "{{url_for('products')}}">List products</a>
+                <a href = "{{url_for('products')}}" class="btn btn-dark">List products</a>
             </li>
             <li class = 'col-3'>
-                <a href = "{{url_for('author')}}">About author</a>
+                <a href = "{{url_for('author')}}" class="btn btn-dark">About author</a>
             </li>
         </ul>
     </nav>
@@ -33,11 +33,11 @@
             <p>this is base file</p>
         {% endblock %}
     </section>
-    <footer class = 'text-center'>
+    <footer class="bg-light text-center py-4 fixed-footer">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-activity" viewBox="0 0 16 16">
             <path fill-rule="evenodd" d="M6 2a.5.5 0 0 1 .47.33L10 12.036l1.53-4.208A.5.5 0 0 1 12 7.5h3.5a.5.5 0 0 1 0 1h-3.15l-1.88 5.17a.5.5 0 0 1-.94 0L6 3.964 4.47 8.171A.5.5 0 0 1 4 8.5H.5a.5.5 0 0 1 0-1h3.15l1.88-5.17A.5.5 0 0 1 6 2"/>
         </svg>
-        <p>Bartlomiej Szczukiewicz, Krakow University of Economics</p>
+        <p class="mb-0 ms-2">Bartlomiej Szczukiewicz, Krakow University of Economics</p>
     </footer>
 </body>
 </html>
