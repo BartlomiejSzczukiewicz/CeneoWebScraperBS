@@ -1,6 +1,7 @@
 from app import app
-from flask import render_template, request, redirect, url_for
+from flask import render_template, request, redirect, url_for, send_file
 import os
+import io
 import json
 import requests
 import pandas as pd
@@ -53,13 +54,13 @@ def extract():
                 opinions = pd.DataFrame.from_dict(all_opinions)
                 opinions.score = opinions.score.apply(lambda s: round(s*MAX_SCORE,1))
                 statistics = {
-                "opinions_count" : opinions_count,
-                'product_name' : product_name,
-                "pros_count" : int(opinions.pros.astype(bool).sum()),
-                "cons_count" : int(opinions.cons.astype(bool).sum()),
-                "average_scorer" : opinions.score.mean().round(3),
-                "score_distribution" : opinions.score.value_counts().sort_index().reindex(np.arange(0,5.5,0.5)),
-                "recommendation_distribution" : opinions.recommendation.value_counts(dropna=False).reindex([1,np.nan,0]).to_dict(),
+                    "opinions_count" : opinions_count,
+                    'product_name' : product_name,
+                    "pros_count" : int(opinions.pros.astype(bool).sum()),
+                    "cons_count" : int(opinions.cons.astype(bool).sum()),
+                    "average_scorer" : opinions.score.mean().round(3),
+                    "score_distribution" : opinions.score.value_counts().sort_index().reindex(np.arange(0,5.5,0.5)),
+                    "recommendation_distribution" : opinions.recommendation.value_counts(dropna=False).reindex([1,np.nan,0]).to_dict()
                 }
                 if not os.path.exists("app/data/statistics"):
                     os.mkdir("app/data/statistics")
@@ -73,11 +74,11 @@ def extract():
 @app.route('/products')
 def products():
     products_list = [filename.split('.')[0] for filename in os.listdir('app/data/opinions')]
-    product = []
+    products = []
     for product_id in products_list:
-        with open(f'app/data/statistics/{product_id}.json','w',encoding='UTF-8') as jf:
-            statistic = json.load(jf)
-            product.append(statistics)
+        with open(f"app/data/statistics/{product_id}.json","r",encoding="UTF-8") as jf:
+            statistics = json.load(jf)
+            products.append(statistics)
     return render_template('products.html', products=products)
 
 @app.route('/author')
@@ -87,7 +88,32 @@ def author():
 @app.route('/product/<product_id>')
 def product(product_id):
     if os.path.exists("app/data/opinions"):
-        with open(f'app/data/opinions/{product_id}.json','r',encoding='UTF-8') as jf:
-            opinions = json.load(jf)
-        return render_template('product.html', product_id = product_id, opinions = opinions)
+        opinions = pd.read_json(f'app/data/opinions/{product_id}.json')
+        #with open(f'app/data/opinions/{product_id}.json','r',encoding='UTF-8') as jf:
+        #    opinions = json.load(jf)
+        return render_template("product.html", product_id = product_id, opinions = opinions.to_html
+        (classes="table table-warning table-striped", table_id="opinions", index=False))
     return redirect(url_for('extract'))
+
+@app.route('/charts/<product_id>')
+def charts(porduct_id):
+    return render_template("charts.html", products=products)
+
+@app.route('/download_json/<product_id>')
+def download_json(product_id):
+    return send_file(f"data/opinions/{product_id}.json", "text/json", as_attachment=True)
+
+@app.route('/download_csv/<product_id>')
+def download_csv(product_id):
+    opinions = pd.read_json(f"app/data/opinions/{product_id}.json")
+    buffer = io.BytesIO(opinions.to_csv(index=False).encode())
+    return send_file(buffer, "text/csv", as_attachment=True, download_name=f"{product_id}.csv")
+
+@app.route('/download_xlsx/<product_id>')
+def download_xlsx(product_id):
+    opinions = pd.read_json(f"app/data/opinions/{product_id}.json")
+    buffer = io.BytesIO()
+    with pd.ExcelWriter(buffer) as writer:
+        opinions.to_excel(writer, index=False)
+    buffer.seek(0)
+    return send_file(buffer, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", as_attachment=True, download_name=f"{product_id}.xlsx")
