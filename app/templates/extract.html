@@ -6,8 +6,9 @@
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
     {% endif %}
-    <h2 class="bt-3 mb-3">Extract opinions</h2>
-    <form class="container" method="POST" action="{{url_for('extract')}}">
+    <h2 class="bt-3 mb-3 text-center">Extract opinions</h2>
+    <div class="text-center">
+    <div class="container" method="POST" action="{{url_for('extract')}}">
         <div class="row g-3 align-items-center">
             <div class="col-auto">
               <label for="product_id" class="col-form-label">Product code</label>
@@ -22,5 +23,6 @@
                 <button type="submit" class="btn btn-warning">Extract</button>
             </div>
         </div>
+    </div>
     </form>
 {% endblock %}
